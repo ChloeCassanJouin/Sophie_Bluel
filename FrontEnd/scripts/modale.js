@@ -35,7 +35,7 @@ window.addEventListener("click", function(event) {
     modal.style.display = "none";
   }
 });
-
+// commentaire test
 
 ///////////////////////////////////////////////////////////////////////////////      AFFICHAGE GALLERIE/
 //récupération Gallerie modale
