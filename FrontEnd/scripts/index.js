@@ -67,7 +67,7 @@ function generateCategories(architectButtons) {
 
 
 //affichage gallerie
-function generateProjets(projects) {
+export function generateProjets(projects) {
     projects.forEach(project => {
         const projectElement = document.createElement("article");
         const imageElement = document.createElement("img");

@@ -1,3 +1,5 @@
+import { generateProjets } from './index.js';
+
 const openModalBtn = document.getElementById('OpenModalBtn');
 const modal = document.querySelector('.modal');
 const modalGallery = document.querySelector(".modalGallery");
@@ -8,14 +10,16 @@ const Modal1SuppressProject = document.querySelector('.Modal1SuppressProject')
 const BtnAddProject = document.querySelector('.addProjectsBtn');
 const arrowBackToModale1 = document.querySelector('.arrowBackToModale1')
 const greySquareModale2 = document.querySelector("greySquareModale2");
+const formAddProject = document.getElementById("formAddProject");
 const imageUrlupload = document.getElementById("imageUrl");
+const mainGallery = document.querySelector(".mainGallery");
 const mountainIconContainer = document.querySelector("mountainIconContainer");
-const addPicturePhrase = document.querySelector('imgFormatAlert');
 const inputFieldsForm = document.querySelectorAll(".formField");
 const formBtn = document.getElementById("boutonValidation");//bouton validation formulaire ajout
 const popup = document.querySelector(".popup");
 let projectElement; // utiliser dans fonction fetch
 
+let project;
 ////////////////////////////////////////////////////////////////////////////////      TOKEN///////////////
 const token = localStorage.getItem("token");
 const isLogged = token ? true : false;// Vérifier si le token existe
@@ -42,10 +46,12 @@ window.addEventListener("click", function(event) {
 
 ///////////////////////////////////////////////////////////////////////////////      AFFICHAGE GALLERIE/
 //récupération Gallerie modale
+function GetGalleryModal() {
 fetch('http://localhost:5678/api/works')
   .then(response => response.json())
   .then(data => {
     modalGallery.innerHTML = "";
+    formAddProject.style.display = "none";
     data.forEach(project => {
       projectElement = document.createElement("article");
 
@@ -55,7 +61,7 @@ fetch('http://localhost:5678/api/works')
 
       const idProjet = document.createElement("div");
       idProjet.classList.add("js-delete-work");
-      idProjet.innerText = project.id;
+      idProjet.id = project.id;
 
       const trashIcon = document.createElement("i");
       trashIcon.classList.add("fas", "fa-trash-alt"); 
@@ -66,10 +72,10 @@ fetch('http://localhost:5678/api/works')
       projectElement.appendChild(imageElement);
       modalGallery.appendChild(projectElement);
     });
-    deleteWork(); // Appeler la fonction deleteWork après avoir généré tous les éléments
+    deleteWork(); 
   });
-
-
+}
+GetGalleryModal()
 
 ///////////////////////////////////////////////////////////////////////////////      AFFICHAGE FORMULAIRE/
 //affichage modale 2
@@ -77,7 +83,7 @@ function Make2ndModalAppear() {
   BtnAddProject.addEventListener("click", function() {
     titleModal.textContent = "Ajout photo";
     Modal1SuppressProject.style.display = "none";
-    formulaireAjoutProjet.style.display= "flex";
+    formAddProject.style.display= "flex";
     arrowModal.style.display= "flex";
 
   });
@@ -88,7 +94,7 @@ Make2ndModalAppear();
 function ArrowBackToModale1() {
   arrowBackToModale1.addEventListener("click", function() {
         titleModal.textContent = "Galerie photo";
-        formulaireAjoutProjet.style.display = "none";
+        formAddProject.style.display = "none";
         Modal1SuppressProject.style.display = "block";
     });
 }
@@ -148,18 +154,14 @@ function previewFile() {
       file_reader.readAsDataURL(file);
 
       file_reader.onload = function() {
-          // Supprimer l'élément existant s'il y en a un
-          const existingImage = document.getElementById('image_selected');
+          /*const existingImage = document.getElementById('image_selected');
           if (existingImage) {
               existingImage.remove();
-          }
-
-          // Créer un élément img pour afficher la miniature
+          }*/
           const image_element = document.createElement('img');
           image_element.id = "image_selected";
           image_element.src = file_reader.result;
 
-          // Insérer l'élément img dans le DOM
           greySquareModale2.appendChild(image_element);
       };
   });
@@ -270,21 +272,44 @@ function deleteWork() {
   btnDeleteList.forEach(function(item) {
       item.addEventListener("click", function(event) {
           event.preventDefault(); 
-          const projectId = this.innerText; 
+          const projectId = this.id; 
           deleteProjets(projectId); 
       });
   });
 }
 
 //suppression de projets
+
+let projects = [];
+
 async function deleteProjets(id) {
   await fetch(`http://localhost:5678/api/works/${id}`, {
-      method: "DELETE",
-      headers: { 
-        Authorization: `Bearer ${token}`},
+    method: "DELETE",
+    headers: { 
+      Authorization: `Bearer ${token}`
+    }
   })
-  .catch (error => {
-      console.log(error);
+  .then(response => {
+    if (response.status === 204) {
+      console.log('Project deleted successfully-204.');
+      modalGallery.innerHTML = ""; 
+      mainGallery.innerHTML = "";
+      GetGalleryModal()
+      generateProjets(projects);
+    }
+    if (response.status == 200) {
+      console.log('Project deleted successfully-200.');
+      // Supprimer l'élément de la galerie modale du DOM
+      modalGallery.innerHTML = "";                                      
+    }
+    if (response.status === 401) {
+      console.log("Une erreur de droits s'est produite-401, veuillez vous relogger.");
+    }
+    if (response.status === 500) {
+      console.log('Une erreur technique est survenu-500, veuillez réessayer.');
+    } 
+  })
+  .catch(error => {
+    console.error('Une erreur est survenue lors de la suppression du projet !', error);
   });
 }
-
