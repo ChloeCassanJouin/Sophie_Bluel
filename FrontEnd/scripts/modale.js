@@ -19,7 +19,6 @@ const formBtn = document.getElementById("boutonValidation");//bouton validation 
 const popup = document.querySelector(".popup");
 let projectElement; // utiliser dans fonction fetch
 
-let project;
 ////////////////////////////////////////////////////////////////////////////////      TOKEN///////////////
 const token = localStorage.getItem("token");
 const isLogged = token ? true : false;// Vérifier si le token existe
@@ -145,7 +144,27 @@ fetchAndDisplayCategories();
 
 
 //********************************************************** */ Afficher la miniature de l'image dans la deuxième modale
-function previewFile() {
+function displayImage() {
+  const inputFile = document.getElementById('imageUrl');
+
+inputFile.addEventListener('change', function(event) {
+    const file = event.target.files[0];
+    handleFile(file);
+});
+  if (!imageInput.files.length === 0) {
+    greySquareModale2.remove('hidden');
+
+  } else {
+    icon.classList.add('hidden');
+    label.classList.add('hidden');
+    paragraph.classList.add('hidden');
+    const selectedFile = imageInput.files[0];
+    const imageUrl = URL.createObjectURL(selectedFile);
+    selectedImage.src = imageUrl;
+    selectedImage.style.display = 'block';
+  }
+}
+/*function previewFile() {
   imageUrlupload.addEventListener('change', function(event) {
       const file = event.target.files[0];
       const file_reader = new FileReader();
@@ -157,7 +176,7 @@ function previewFile() {
           /*const existingImage = document.getElementById('image_selected');
           if (existingImage) {
               existingImage.remove();
-          }*/
+          }
           const image_element = document.createElement('img');
           image_element.id = "image_selected";
           image_element.src = file_reader.result;
@@ -166,7 +185,7 @@ function previewFile() {
       };
   });
 }
-previewFile()
+previewFile()*/
 
 /*function previewFile() {
   imageUrlupload.addEventListener('change', previewFile);
@@ -252,7 +271,12 @@ async function ajoutListenerAjoutProjet() {
               },
               body: formData,
           });
-
+          if (response.status === 201|| response.status === 200) {
+            modalGallery.innerHTML = ""; 
+            mainGallery.innerHTML = "";
+            GetGalleryModal()
+            return
+        }
           if (response.status === 400 || response.status === 500) {
               showPopupAlertAddProject("Veuillez remplir tous les champs du formulaire.");
               return;
@@ -274,6 +298,7 @@ function deleteWork() {
           event.preventDefault(); 
           const projectId = this.id; 
           deleteProjets(projectId); 
+
       });
   });
 }
@@ -294,8 +319,8 @@ async function deleteProjets(id) {
       console.log('Project deleted successfully-204.');
       modalGallery.innerHTML = ""; 
       mainGallery.innerHTML = "";
-      GetGalleryModal()
-      generateProjets(projects);
+      GetGalleryModal();
+      generateProjets();
     }
     if (response.status == 200) {
       console.log('Project deleted successfully-200.');
@@ -303,10 +328,10 @@ async function deleteProjets(id) {
       modalGallery.innerHTML = "";                                      
     }
     if (response.status === 401) {
-      console.log("Une erreur de droits s'est produite-401, veuillez vous relogger.");
+      showPopupAlertAddProject("Une erreur de droits s'est produite-401, veuillez vous relogger.");
     }
     if (response.status === 500) {
-      console.log('Une erreur technique est survenu-500, veuillez réessayer.');
+      showPopupAlertAddProject('Une erreur technique est survenu-500, veuillez réessayer.');
     } 
   })
   .catch(error => {
