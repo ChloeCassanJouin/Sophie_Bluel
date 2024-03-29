@@ -8,7 +8,7 @@ const arrowModal = document.querySelector(".fa-arrow-left");
 const titleModal = document.querySelector('.titleModal');
 const Modal1SuppressProject = document.querySelector('.Modal1SuppressProject')
 const BtnAddProject = document.querySelector('.addProjectsBtn');
-const arrowBackToModale1 = document.querySelector('.arrowBackToModale1')
+const arrowBackToModale1 = document.querySelector('.arrowBackToModale1');
 const greySquareModale2 = document.querySelector("greySquareModale2");
 const formAddProject = document.getElementById("formAddProject");
 const imageUrlupload = document.getElementById("imageUrl");
@@ -22,7 +22,6 @@ let projectElement; // utiliser dans fonction fetch
 ////////////////////////////////////////////////////////////////////////////////      TOKEN///////////////
 const token = localStorage.getItem("token");
 const isLogged = token ? true : false;// Vérifier si le token existe
-console.log(isLogged); // Affiche true si un token existe, sinon false
 
 
 ///////////////////////////////////////////////////////////////////////////////      OUVERTURE-FERMETURE MODALE/
@@ -145,7 +144,17 @@ fetchAndDisplayCategories();
 
 //********************************************************** */ Afficher la miniature de l'image dans la deuxième modale
 function displayImage() {
-  const inputFile = document.getElementById('imageUrl');
+  imageUrlupload.addEventListener('change', function(event) {
+    const file = event.target.files[0];
+    const file_reader = new FileReader();
+    const inputFile = document.getElementById('imageUrl');
+    console.log(file, file_reader)
+    
+    //mountainIconContainer.remove();
+  })
+}
+displayImage()
+  /*
 
 inputFile.addEventListener('change', function(event) {
     const file = event.target.files[0];
@@ -162,8 +171,8 @@ inputFile.addEventListener('change', function(event) {
     const imageUrl = URL.createObjectURL(selectedFile);
     selectedImage.src = imageUrl;
     selectedImage.style.display = 'block';
-  }
-}
+  }*/
+
 /*function previewFile() {
   imageUrlupload.addEventListener('change', function(event) {
       const file = event.target.files[0];
@@ -248,7 +257,7 @@ inputFieldsForm.forEach(field => {
 });
 
 ///////////////////////////////////////////////////////////////////////////////    AJOUT PROJET - ENVOI API/
-// Ajouter un projet - formulaire bien rempli
+// Ajouter un projet 
 async function ajoutListenerAjoutProjet() {
   formBtn.addEventListener("click", async function(event) {
       event.preventDefault();
@@ -257,7 +266,7 @@ async function ajoutListenerAjoutProjet() {
       const photo = document.getElementById("imageUrl").files[0];
       const title = document.querySelector("input[name='title']").value;
       const category = document.querySelector("select[name='category.name']").value;
-      console.log(token, photo, title, category)
+
       try {
           const formData = new FormData();
           formData.append('image', photo);
@@ -274,9 +283,10 @@ async function ajoutListenerAjoutProjet() {
           if (response.status === 201|| response.status === 200) {
             modalGallery.innerHTML = ""; 
             mainGallery.innerHTML = "";
-            GetGalleryModal()
+            GetGalleryModal();
+            generateProjets();
             return
-        }
+          }
           if (response.status === 400 || response.status === 500) {
               showPopupAlertAddProject("Veuillez remplir tous les champs du formulaire.");
               return;
@@ -292,7 +302,6 @@ ajoutListenerAjoutProjet()
 // click poubelle
 function deleteWork() {
   let btnDeleteList = document.querySelectorAll(".js-delete-work");
-  console.log(btnDeleteList)
   btnDeleteList.forEach(function(item) {
       item.addEventListener("click", function(event) {
           event.preventDefault(); 

@@ -43,37 +43,36 @@ logLinkRoad()
 
 
 //affichage boutons filtre catégories
-async function generateCategories(architectButtons) {
+async function generateCategories() {
     fetch('http://localhost:5678/api/categories');
-    then(architectButtons = await response.json())
-    .then(data => {
+    then(reponse = await response.json())
+    then(data => {
+        const projectsByCategory = {};
         data.forEach(project => {
-    const projectsByCategory = {};
-    architectButtons.forEach(category => {
-    projectsByCategory[category.name] = architectProjects.filter(project => project.category.name === category.name);
-    });
-    if(isLogged === true) {
-        buttonAll.remove();
-    }
-    if(isLogged === false) {
-        ModalBtn.remove();
-        sectionButtons.innerHTML = '';
-
-        architectButtons.forEach(category => {
-            const projectCategoriesElement = document.createElement("button");
-            projectCategoriesElement.classList.add("buttonHighlight");
-            projectCategoriesElement.textContent = category.name;
-            projectCategoriesElement.addEventListener('click', function () {
-                genereProjets(projectsByCategory[category.name]);
-             });
-            sectionButtons.appendChild(projectCategoriesElement); 
+            architectButtons.forEach(category => {
+            projectsByCategory[category.name] = architectProjects.filter(project => project.category.name === category.name);
+            });
+            if(isLogged === true) {
+                buttonAll.remove();
+            }
+            if(isLogged === false) {
+                ModalBtn.remove();
+                sectionButtons.innerHTML = '';
+                architectButtons.forEach(category => {
+                    const projectCategoriesElement = document.createElement("button");
+                    projectCategoriesElement.classList.add("buttonHighlight");
+                    projectCategoriesElement.textContent = category.name;
+                    projectCategoriesElement.addEventListener('click', function () {
+                        genereProjets(projectsByCategory[category.name]);
+                    });
+                    sectionButtons.appendChild(projectCategoriesElement); 
+                });
+            }
+        buttonAll.addEventListener('click', function() {}); // bouton TOUS
         });
-    }
-    buttonAll.addEventListener('click', function() { // bouton tous
     });
-});
-});
 }
+generateCategories(architectButtons);
 
 
 //affichage gallerie
@@ -102,7 +101,7 @@ export  function generateProjets() {
 }); 
 } 
 generateProjets();
-generateCategories(architectButtons);
+
 
 
 export function testExport() {
