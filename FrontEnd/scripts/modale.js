@@ -147,10 +147,15 @@ function displayImage() {
   imageUrlupload.addEventListener('change', function(event) {
     const file = event.target.files[0];
     const file_reader = new FileReader();
-    const inputFile = document.getElementById('imageUrl');
     console.log(file, file_reader)
+  });
+  imageUrlupload.addEventListener('click', function() {
+    console.log("j'ai cliqué sur imageUrl")
+    mountainIconContainer.style.display = "none";
+    //const inputFile = document.getElementById('imageUrl');
+
     
-    //mountainIconContainer.remove();
+
   })
 }
 displayImage()
@@ -287,6 +292,10 @@ async function ajoutListenerAjoutProjet() {
             generateProjets();
             return
           }
+          if (response.status === 401) {
+            showPopupAlertAddProject("Veuillez enregistrer à nouveau vos identifiants.");
+            return;
+        }
           if (response.status === 400 || response.status === 500) {
               showPopupAlertAddProject("Veuillez remplir tous les champs du formulaire.");
               return;

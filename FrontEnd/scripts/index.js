@@ -1,15 +1,10 @@
-/*const response = await fetch('http://localhost:5678/api/works');
-const architectProjects = await response.json();
-const responseCategories = await fetch('http://localhost:5678/api/categories');
-const architectButtons = await responseCategories.json();*/
 const sectionButtons = document.querySelector(".buttonsFilter");
 const buttonAll = document.querySelector(".btn-filter_all");
 const mainGallery = document.querySelector(".mainGallery");
 const ModalBtn = document.getElementById("OpenModalBtn");
 const logLink = document.getElementById("logLink");
 let btnDeleteList = document.querySelectorAll(".js-delete-work");
-let architectProjects;
-let architectButtons;
+
 
 // Récupérer le token depuis le stockage local
 const token = localStorage.getItem("token");
@@ -43,36 +38,44 @@ logLinkRoad()
 
 
 //affichage boutons filtre catégories
-async function generateCategories() {
-    fetch('http://localhost:5678/api/categories');
-    then(reponse = await response.json())
-    then(data => {
+function generateCategories() {
+
+    fetch('http://localhost:5678/api/categories')
+
+    .then(response => response.json())
+
+    .then(data => {
         const projectsByCategory = {};
-        data.forEach(project => {
+        console.log(projectsByCategory)
+        
+       /* data.forEach(category => {
+            projectsByCategory[category.name] = projectsByCategory.filter(project => project.category.name === category.name);// souci appel
+        });*/
+
+        if (isLogged === true) {
+            buttonAll.remove();
+        }
+
+        if (isLogged === false) {
+            ModalBtn.remove();
+            sectionButtons.innerHTML = '';
             architectButtons.forEach(category => {
-            projectsByCategory[category.name] = architectProjects.filter(project => project.category.name === category.name);
-            });
-            if(isLogged === true) {
-                buttonAll.remove();
-            }
-            if(isLogged === false) {
-                ModalBtn.remove();
-                sectionButtons.innerHTML = '';
-                architectButtons.forEach(category => {
-                    const projectCategoriesElement = document.createElement("button");
-                    projectCategoriesElement.classList.add("buttonHighlight");
-                    projectCategoriesElement.textContent = category.name;
-                    projectCategoriesElement.addEventListener('click', function () {
-                        genereProjets(projectsByCategory[category.name]);
-                    });
-                    sectionButtons.appendChild(projectCategoriesElement); 
+                const projectCategoriesElement = document.createElement("button");
+                projectCategoriesElement.classList.add("buttonHighlight");
+                projectCategoriesElement.textContent = category.name;
+                projectCategoriesElement.addEventListener('click', function () {
+                    generateProjects(projectsByCategory[category.name]);
                 });
-            }
-        buttonAll.addEventListener('click', function() {}); // bouton TOUS
-        });
+                sectionButtons.appendChild(projectCategoriesElement);
+            });
+        }
+    })
+    .catch(error => {
+        console.error('Une erreur est survenue lors de la récupération des catégories :', error);
     });
 }
-generateCategories(architectButtons);
+
+
 
 
 //affichage gallerie
@@ -101,7 +104,7 @@ export  function generateProjets() {
 }); 
 } 
 generateProjets();
-
+generateCategories();
 
 
 export function testExport() {
