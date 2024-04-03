@@ -1,3 +1,8 @@
+import { getCategoryAPI } from './api.js';
+
+getCategoryAPI()
+console.log(getCategoriesAPI)
+
 const sectionButtons = document.querySelector(".buttonsFilter");
 const buttonAll = document.querySelector(".btn-filter_all");
 const mainGallery = document.querySelector(".mainGallery");
@@ -20,8 +25,6 @@ function loggedState() {
 }
 loggedState()
 
-// appel de la Galerie
-
 
 //suppression du token dans le localStorage selon login ou logout
 function logLinkRoad() {
@@ -36,54 +39,44 @@ function logLinkRoad() {
 }
 logLinkRoad()
 
-
+//;
 //affichage boutons filtre catégories
 function generateCategories() {
 
-    fetch('http://localhost:5678/api/categories')
-
-    .then(response => response.json())
-
-    .then(data => {
-        const projectsByCategory = {};
-        console.log(projectsByCategory)
-        
-       /* data.forEach(category => {
-            projectsByCategory[category.name] = projectsByCategory.filter(project => project.category.name === category.name);// souci appel
-        });*/
-
-        if (isLogged === true) {
-            buttonAll.remove();
-        }
-
-        if (isLogged === false) {
-            ModalBtn.remove();
-            sectionButtons.innerHTML = '';
-            architectButtons.forEach(category => {
-                const projectCategoriesElement = document.createElement("button");
-                projectCategoriesElement.classList.add("buttonHighlight");
-                projectCategoriesElement.textContent = category.name;
-                projectCategoriesElement.addEventListener('click', function () {
-                    generateProjects(projectsByCategory[category.name]);
-                });
-                sectionButtons.appendChild(projectCategoriesElement);
-            });
-        }
-    })
-    .catch(error => {
-        console.error('Une erreur est survenue lors de la récupération des catégories :', error);
+    allCategoriesAPI.forEach(category => {
+        projectsByCategory[category.name] = architectProjects.filter(project => project.category.name === category.name);// souci appel
     });
+
+    if (isLogged === true) {
+        buttonAll.remove();
+    }
+
+    if (isLogged === false) {
+        ModalBtn.remove();
+        sectionButtons.innerHTML = '';
+        allCategoriesAPI.forEach(category => {
+            const projectCategoriesElement = document.createElement("button");
+            projectCategoriesElement.classList.add("buttonHighlight");
+            projectCategoriesElement.textContent = category.name;
+            projectCategoriesElement.addEventListener('clic', function () {
+                generateProjects(projectsByCategory[category.name]);
+            });
+            sectionButtons.appendChild(projectCategoriesElement);
+        });
+    }
 }
+generateCategories();
+    /*.catch(error => {
+        console.error('Une erreur est survenue lors de la récupération des catégories :', error);
+    });*/
 
 
 
 
 //affichage gallerie
 export  function generateProjets() {
-    fetch('http://localhost:5678/api/works')
-    .then(response => response.json())
-    .then(data => {
-        data.forEach(project => {
+
+        allWorksAPI.forEach(project => {
         const projectElement = document.createElement("article");
         const imageElement = document.createElement("img");
         imageElement.src = project.imageUrl;
@@ -101,10 +94,8 @@ export  function generateProjets() {
         });
     });
     });
-}); 
 } 
-generateProjets();
-generateCategories();
+generateProjets()
 
 
 export function testExport() {

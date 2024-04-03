@@ -26,9 +26,10 @@ const isLogged = token ? true : false;// Vérifier si le token existe
 
 ///////////////////////////////////////////////////////////////////////////////      OUVERTURE-FERMETURE MODALE/
 //ouverture modale1
-openModalBtn.addEventListener("click", function() {
+/*openModalBtn.addEventListener("click", function() {
   modal.style.display = "flex";
-});
+  arrowModal.style.display= "none";
+});*/
 
 //fermeture modale
 closeModalBtn.addEventListener("click", function() {
@@ -94,6 +95,7 @@ function ArrowBackToModale1() {
         titleModal.textContent = "Galerie photo";
         formAddProject.style.display = "none";
         Modal1SuppressProject.style.display = "block";
+        arrowModal.style.display= "none";
     });
 }
 ArrowBackToModale1();
@@ -266,6 +268,10 @@ inputFieldsForm.forEach(field => {
 async function ajoutListenerAjoutProjet() {
   formBtn.addEventListener("click", async function(event) {
       event.preventDefault();
+      modal.style.display = "none";
+      Modal1SuppressProject.style.display = "block";
+      titleModal.textContent = "Galerie photo";
+      arrowModal.style.display= "none";
 
       const token = localStorage.getItem("token");
       const photo = document.getElementById("imageUrl").files[0];
