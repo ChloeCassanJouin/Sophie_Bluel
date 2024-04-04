@@ -1,4 +1,4 @@
-import { generateProjets } from './index.js';
+import { getWorksAPI, allWorksAPI } from './api.js';
 
 const openModalBtn = document.getElementById('OpenModalBtn');
 const modal = document.querySelector('.modal');
@@ -26,10 +26,10 @@ const isLogged = token ? true : false;// Vérifier si le token existe
 
 ///////////////////////////////////////////////////////////////////////////////      OUVERTURE-FERMETURE MODALE/
 //ouverture modale1
-/*openModalBtn.addEventListener("click", function() {
+openModalBtn.addEventListener("click", function() {
   modal.style.display = "flex";
   arrowModal.style.display= "none";
-});*/
+});
 
 //fermeture modale
 closeModalBtn.addEventListener("click", function() {
@@ -143,91 +143,6 @@ fetchAndDisplayCategories();
 
 
 
-
-//********************************************************** */ Afficher la miniature de l'image dans la deuxième modale
-function displayImage() {
-  imageUrlupload.addEventListener('change', function(event) {
-    const file = event.target.files[0];
-    const file_reader = new FileReader();
-    console.log(file, file_reader)
-  });
-  imageUrlupload.addEventListener('click', function() {
-    console.log("j'ai cliqué sur imageUrl")
-    mountainIconContainer.style.display = "none";
-    //const inputFile = document.getElementById('imageUrl');
-
-    
-
-  })
-}
-displayImage()
-  /*
-
-inputFile.addEventListener('change', function(event) {
-    const file = event.target.files[0];
-    handleFile(file);
-});
-  if (!imageInput.files.length === 0) {
-    greySquareModale2.remove('hidden');
-
-  } else {
-    icon.classList.add('hidden');
-    label.classList.add('hidden');
-    paragraph.classList.add('hidden');
-    const selectedFile = imageInput.files[0];
-    const imageUrl = URL.createObjectURL(selectedFile);
-    selectedImage.src = imageUrl;
-    selectedImage.style.display = 'block';
-  }*/
-
-/*function previewFile() {
-  imageUrlupload.addEventListener('change', function(event) {
-      const file = event.target.files[0];
-      const file_reader = new FileReader();
-      console.log(file, file_reader)
-
-      file_reader.readAsDataURL(file);
-
-      file_reader.onload = function() {
-          /*const existingImage = document.getElementById('image_selected');
-          if (existingImage) {
-              existingImage.remove();
-          }
-          const image_element = document.createElement('img');
-          image_element.id = "image_selected";
-          image_element.src = file_reader.result;
-
-          greySquareModale2.appendChild(image_element);
-      };
-  });
-}
-previewFile()*/
-
-/*function previewFile() {
-  imageUrlupload.addEventListener('change', previewFile);
-  if (this.files.length === 0) { 
-    return;
-  }
-  console.log(this.files[0].name);
-  /*const file = this.files[0];
-  const file_reader = new FileReader();
-
-  file_reader.readAsDataURL(file);
-
-  file_reader.addEventListener('load', (event) => displayImage(event, file));
-//previewFile();
-
-
-function displayImage(event, file) {
-  greySquareModale2.remove();
-  const figure_element = document.createElement('figure');
-  figure_element.id = "image_selected";
-  const image_element = document.createElement('img');
-  image_element.src = event.target.result;
-}
-*/
-
-
 //popup
 function showPopupAlertAddProject(message) {
   const popupContent = document.createElement("div");
@@ -312,6 +227,35 @@ async function ajoutListenerAjoutProjet() {
   });
 }
 ajoutListenerAjoutProjet()
+
+
+/**********************************************************  Afficher la miniature de l'image dans la deuxième modale*/
+function displayImage() {
+  const previewPhoto = () => {
+    const file = imageUrlupload.files;
+    if (file) {
+        
+        const fileReader = new FileReader();
+        const preview = document.getElementById('file-preview');
+fileReader.onload = function (event) {
+            preview.setAttribute('src', event.target.result);
+        }
+        fileReader.readAsDataURL(file[0]); 
+    }
+}
+imageUrlupload.addEventListener("change", previewPhoto);
+}
+
+displayImage()
+emptyGreySquareModal2()
+
+function emptyGreySquareModal2() {
+  imageUrlupload.addEventListener("click", function() {
+  greySquareModale2.innerHTML= "";
+});
+}
+emptyGreySquareModal2()
+
 
 ////////////////////////////////////////////////////////////////////////////////////      SUPRESSION PROJET/
 // click poubelle

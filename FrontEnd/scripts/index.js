@@ -1,7 +1,12 @@
-import { getCategoryAPI } from './api.js';
+import { getCategoryAPI, allCategoriesAPI, getWorksAPI, allWorksAPI } from './api.js';
 
-getCategoryAPI()
-console.log(getCategoriesAPI)
+async function initialize() {
+    await getCategoryAPI();
+    console.log(allCategoriesAPI, "categories exporté");
+    await getWorksAPI();
+    console.log(allWorksAPI, "Works exporté")
+}
+initialize();
 
 const sectionButtons = document.querySelector(".buttonsFilter");
 const buttonAll = document.querySelector(".btn-filter_all");
@@ -39,12 +44,14 @@ function logLinkRoad() {
 }
 logLinkRoad()
 
+
+
 //;
 //affichage boutons filtre catégories
 function generateCategories() {
-
+    try {
     allCategoriesAPI.forEach(category => {
-        projectsByCategory[category.name] = architectProjects.filter(project => project.category.name === category.name);// souci appel
+        projectsByCategory[category.name] = allWorksAPI.filter(project => project.category.name === category.name);
     });
 
     if (isLogged === true) {
@@ -64,19 +71,19 @@ function generateCategories() {
             sectionButtons.appendChild(projectCategoriesElement);
         });
     }
+    }
+    catch (error) {
+        console.log("Une erreur est survenue lors de la récupération des catégories", error);
+    }
 }
 generateCategories();
-    /*.catch(error => {
-        console.error('Une erreur est survenue lors de la récupération des catégories :', error);
-    });*/
 
 
 
 
 //affichage gallerie
-export  function generateProjets() {
-
-        allWorksAPI.forEach(project => {
+function generateProjets(projects) {
+        projects.forEach(project => {
         const projectElement = document.createElement("article");
         const imageElement = document.createElement("img");
         imageElement.src = project.imageUrl;
@@ -86,18 +93,14 @@ export  function generateProjets() {
         projectElement.appendChild(imageElement);
         projectElement.appendChild(titleElement);
         mainGallery.appendChild(projectElement);
-    
+    });
+
     btnDeleteList.forEach(function(item) {
         item.addEventListener("click", function(event) {
             event.preventDefault(); 
             projectElement.id.remove();
         });
     });
-    });
+    
 } 
-generateProjets()
-
-
-export function testExport() {
-    console.log("j'ai bien été exporté")
-}
+generateProjets(allWorksAPI)

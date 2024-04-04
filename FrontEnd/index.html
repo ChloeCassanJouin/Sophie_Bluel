@@ -9,9 +9,7 @@
 	<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=Work+Sans&display=swap" rel="stylesheet">
 	<script src="https://kit.fontawesome.com/8f1a74b784.js" crossorigin="anonymous"></script>
 	<link rel="stylesheet" href="./assets/CSS/style.css">
-	<script type="module" src="./scripts/api.js"></script>
-	<script type="module" src="./scripts/index.js"></script>
-	<script type="module" src="./scripts/modale.js"></script>
+
 </head>
 <body>
 <header>
@@ -69,7 +67,9 @@
 						<label for="imageUrl" class="AddPicturePhrase ImgUploadBtn">+ Ajouter photo</label>
 						<input type="file" id="imageUrl" name="imageUrl" accept="image/jpeg, image/png" class="formField">
 						<label for="imageUrl" class="imgFormatAlert">jpg, png : 4mo max</label>
+						
 					</div>
+					<img src="#" alt="Preview Uploaded Image" id="file-preview">
 					<label class="modalCategoryTitle">Titre</label>
 					<input type="text" name="title" class="ModalAddProjectTitleCase formField">
 					<label for="categorySelect" class="modalCategoryCategory">Catégorie</label>
@@ -106,6 +106,8 @@
 		</ul>
 	</nav>
 </footer>
-
+<script type="module" src="./scripts/api.js"></script>
+<script type="module" src="./scripts/index.js"></script>
+<script type="module" src="./scripts/modale.js"></script>
 </body>
 </html>

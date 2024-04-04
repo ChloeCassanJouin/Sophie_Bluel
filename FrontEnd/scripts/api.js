@@ -1,32 +1,35 @@
 // appel API works et catégories pour récupération éléments
 
-function getCategoryAPI() {
-    fetch('http://localhost:5678/api/categories')
-    .then((response) => {
-        return response.json();
-    })
-    .then(data => {
-        let allCategoriesAPI = data;
-        console.log(allCategoriesAPI, "dans la fonction")
-    })
-    .catch(function(error) {
-        console.log(error);
-      });
-}
-getCategoryAPI();
+export let allCategoriesAPI; 
+export let allWorksAPI;
 
-function getWorksAPI() {
-    fetch('http://localhost:5678/api/works')
-    .then((response) => {
-        return response.json();
-      })
-    .then(data => {
-        let allWorksAPI = data;
-        console.log(allWorksAPI, "dans la fonction")
 
-    })
-    .catch(function(error) {
-        console.log(error);
-      });
+export async function getCategoryAPI() {
+    try {
+        const response = await fetch('http://localhost:5678/api/categories');
+        if (!response.ok) {
+            throw new Error('Erreur lors de la requête.');
+        }
+        const data = await response.json();
+        allCategoriesAPI = data;
+        console.log(allCategoriesAPI, "categories source");
+    } catch (error) {
+        console.log('Une erreur est survenue :', error);
+    }
 }
-getWorksAPI()
+
+
+export async function getWorksAPI() {
+    try {
+        const response = await fetch('http://localhost:5678/api/works');
+        if (!response.ok) {
+            throw new Error('Erreur lors de la requête.');
+        }
+        const data = await response.json();
+        allWorksAPI = data;
+        console.log(allWorksAPI, "works source");
+    } catch (error) {
+        console.log('Une erreur est survenue :', error);
+    }
+}
+
