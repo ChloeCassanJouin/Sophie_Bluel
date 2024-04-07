@@ -1,4 +1,5 @@
-import { getWorksAPI, allWorksAPI } from './api.js';
+import { getWorksAPI } from './api.js';
+import { generateProjects } from './index.js';
 
 const openModalBtn = document.getElementById('OpenModalBtn');
 const modal = document.querySelector('.modal');
@@ -12,6 +13,7 @@ const arrowBackToModale1 = document.querySelector('.arrowBackToModale1');
 const greySquareModale2 = document.querySelector("greySquareModale2");
 const formAddProject = document.getElementById("formAddProject");
 const imageUrlupload = document.getElementById("imageUrl");
+const imageuploadButton = document.querySelector("ImgUploadBtn");
 const mainGallery = document.querySelector(".mainGallery");
 const mountainIconContainer = document.querySelector("mountainIconContainer");
 const inputFieldsForm = document.querySelectorAll(".formField");
@@ -41,17 +43,16 @@ window.addEventListener("click", function(event) {
     modal.style.display = "none";
   }
 });
-// commentaire test
+
 
 ///////////////////////////////////////////////////////////////////////////////      AFFICHAGE GALLERIE/
-//récupération Gallerie modale
-function GetGalleryModal() {
-fetch('http://localhost:5678/api/works')
-  .then(response => response.json())
-  .then(data => {
+//affichage Gallerie modale
+async function GetGalleryModal() {
+  try {
+    const dataWorksFromAPI = await getWorksAPI();
     modalGallery.innerHTML = "";
     formAddProject.style.display = "none";
-    data.forEach(project => {
+    dataWorksFromAPI.forEach(project => {
       projectElement = document.createElement("article");
 
       const imageElement = document.createElement("img");
@@ -72,9 +73,13 @@ fetch('http://localhost:5678/api/works')
       modalGallery.appendChild(projectElement);
     });
     deleteWork(); 
-  });
+
+  } catch (error) {
+    console.log("Une erreur est survenue lors de la récupération des catégories", error);
+}
 }
 GetGalleryModal()
+
 
 ///////////////////////////////////////////////////////////////////////////////      AFFICHAGE FORMULAIRE/
 //affichage modale 2
@@ -84,7 +89,6 @@ function Make2ndModalAppear() {
     Modal1SuppressProject.style.display = "none";
     formAddProject.style.display= "flex";
     arrowModal.style.display= "flex";
-
   });
 }
 Make2ndModalAppear();
@@ -100,18 +104,6 @@ function ArrowBackToModale1() {
 }
 ArrowBackToModale1();
 
-//vérification Formulaire modale 2
-function verifyFormAddProjectModal2() {
-  const imageAddProjectModal2 = document.getElementById("imageUrl").value;
-  const titleAddProjectModal2 = document.querySelector("ModalAddProjectTitleCase").value;
-  const categoryAddProjectModal2 = document.getElementById("modalAddImageCategory").value;
-
-  if (imageAddProjectModal2 === '' || titleAddProjectModal2 === '' || categoryAddProjectModal2 === '') {
-    alert('Veuillez remplir tous les champs du formulaire');
-    return false;
-  }
-  return true;
-}
 
 
 ///////////////////////////////////////////////////////////////////////////////    STRUCTURE FORMULAIRE AJOUT PROJET/
@@ -141,6 +133,18 @@ function fetchAndDisplayCategories() {
 }
 fetchAndDisplayCategories();
 
+//vérification Formulaire modale 2
+function verifyFormAddProjectModal2() {
+  const imageAddProjectModal2 = document.getElementById("imageUrl").value;
+  const titleAddProjectModal2 = document.querySelector("ModalAddProjectTitleCase").value;
+  const categoryAddProjectModal2 = document.getElementById("modalAddImageCategory").value;
+
+  if (imageAddProjectModal2 === '' || titleAddProjectModal2 === '' || categoryAddProjectModal2 === '') {
+    alert('Veuillez remplir tous les champs du formulaire');
+    return false;
+  }
+  return true;
+}
 
 
 //popup
@@ -152,17 +156,17 @@ function showPopupAlertAddProject(message) {
   popup.appendChild(popupContent);
   popup.style.display = "block";
 
+  document.addEventListener("click", closePopup);
 
-document.addEventListener("click", closePopup);
-
-function closePopup(event) {
-  if (!popup.contains(event.target)) {
-    popupContent.remove();
-    popup.style.display = "none";
-    document.removeEventListener("click", closePopup);
+  function closePopup(event) {
+    if (!popup.contains(event.target)) {
+      popupContent.remove();
+      popup.style.display = "none";
+      document.removeEventListener("click", closePopup);
+    }
   }
-}
-}
+}  
+
 
 //changement couleur bouton VALIDER formulaire ajout projet
 inputFieldsForm.forEach(field => {
@@ -210,7 +214,7 @@ async function ajoutListenerAjoutProjet() {
             modalGallery.innerHTML = ""; 
             mainGallery.innerHTML = "";
             GetGalleryModal();
-            generateProjets();
+            generateProjects();
             return
           }
           if (response.status === 401) {
@@ -218,7 +222,8 @@ async function ajoutListenerAjoutProjet() {
             return;
         }
           if (response.status === 400 || response.status === 500) {
-              showPopupAlertAddProject("Veuillez remplir tous les champs du formulaire.");
+            console.log("erreur 500")
+            showPopupAlertAddProject("Veuillez remplir tous les champs du formulaire.");
               return;
           }
       } catch (error) {
@@ -234,7 +239,6 @@ function displayImage() {
   const previewPhoto = () => {
     const file = imageUrlupload.files;
     if (file) {
-        
         const fileReader = new FileReader();
         const preview = document.getElementById('file-preview');
 fileReader.onload = function (event) {
@@ -247,14 +251,14 @@ imageUrlupload.addEventListener("change", previewPhoto);
 }
 
 displayImage()
-emptyGreySquareModal2()
+                                                                                                                                    
 
-function emptyGreySquareModal2() {
-  imageUrlupload.addEventListener("click", function() {
-  greySquareModale2.innerHTML= "";
+/*function emptyGreySquareModal2() {
+  imageuploadButton.addEventListener("click", function() {
+  
 });
 }
-emptyGreySquareModal2()
+emptyGreySquareModal2()*/
 
 
 ////////////////////////////////////////////////////////////////////////////////////      SUPRESSION PROJET/
@@ -288,7 +292,7 @@ async function deleteProjets(id) {
       modalGallery.innerHTML = ""; 
       mainGallery.innerHTML = "";
       GetGalleryModal();
-      generateProjets();
+      generateProjects();
     }
     if (response.status == 200) {
       console.log('Project deleted successfully-200.');
