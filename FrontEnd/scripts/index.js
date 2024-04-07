@@ -45,11 +45,12 @@ logLinkRoad()
         
 
 //affichage des projets
-export async function generateProjects() {
+let allProjects = [];
+
+export async function generateProjects(projects) {
     try {
-        const dataWorksFromAPI = await getWorksAPI();
         mainGallery.innerHTML = "";
-        dataWorksFromAPI.forEach(project => {
+        projects.forEach(project => {
             const projectElement = document.createElement("article");
             const imageElement = document.createElement("img");
             imageElement.src = project.imageUrl;
@@ -60,55 +61,41 @@ export async function generateProjects() {
             projectElement.appendChild(titleElement);
             mainGallery.appendChild(projectElement);
         });
-
-    }
-    catch (error) {
-        console.log("Une erreur est survenue lors de la récupération des catégories", error);
+    } catch (error) {
+        console.log("Une erreur est survenue lors de la récupération des projets", error);
     }
 }
 
-
-
-
-
-//affichage boutons filtre catégories
+// Affichage boutons filtre catégories
 async function generateCategories() {
     try {
         const dataCategoriesFromAPI = await getCategoryAPI();
-        const dataWorksFromAPI = await getWorksAPI();
-        const projectsByCategory = {};
-        console.log(projectsByCategory)
-        dataCategoriesFromAPI.forEach(category => {
-            projectsByCategory[category.name] = dataWorksFromAPI.filter(project =>project.category.name === category.name);
-        });
+        allProjects = await getWorksAPI(); // Stocker tous les projets initialement
 
         if (isLogged === true) {
             buttonAll.remove();
-        } 
-    
-        else {
+        } else {
+            generateProjects(allProjects);// bouton tous
             ModalBtn.remove();
             sectionButtons.innerHTML = '';
 
             dataCategoriesFromAPI.forEach(category => {
-                    const projectCategoriesElement = document.createElement("button");
-                    console.log(projectCategoriesElement)
-                    projectCategoriesElement.classList.add("buttonCategories");
-                    projectCategoriesElement.textContent = category.name;
-                    console.log("la") 
-                    projectCategoriesElement.addEventListener('click', function () {
-                        console.log("la") 
-                        generateProjects(projectsByCategory[category.name]); // probleme lecture de ce code
-                    });
-                    sectionButtons.appendChild(projectCategoriesElement);
+                const projectCategoriesElement = document.createElement("button");
+                projectCategoriesElement.classList.add("buttonCategories");
+                projectCategoriesElement.textContent = category.name;
+                projectCategoriesElement.addEventListener('click', function () {
+                    const projectsForCategory = allProjects.filter(project => project.category.name === category.name);
+                    generateProjects(projectsForCategory);
                 });
-                buttonAll.addEventListener('click', function() { // bouton tous
-                });
-            }
+                sectionButtons.appendChild(projectCategoriesElement);
+            });
+            buttonAll.addEventListener('click', function() { 
+                generateProjects(allProjects);// bouton tous
+            });
+        }
     } catch (error) {
         console.log("Une erreur est survenue lors de la récupération des catégories", error);
     }
 }
 
 generateCategories();
-generateProjects();
