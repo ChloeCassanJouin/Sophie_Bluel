@@ -97,6 +97,11 @@ function Make2ndModalAppear() {
     formAddProject.reset();
     const imagePreview = document.getElementById('file-preview');
     imagePreview.src = ""; 
+    const imageMiniature = document.querySelector(".imageMiniature"); 
+    const greySquareModale2 = document.querySelector(".greySquareModale2");
+    greySquareModale2.style.display = "flex";
+    imageMiniature.style.display = "none"; 
+
   });
 }
 Make2ndModalAppear();
