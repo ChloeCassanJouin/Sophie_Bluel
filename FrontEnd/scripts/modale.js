@@ -158,25 +158,7 @@ function verifyFormAddProjectModal2() {
 }
 
 
-//popup
-function showPopupAlertAddProject(message) {
-  const popupContent = document.createElement("div");
-  popupContent.classList.add("popup-content");
-  popupContent.innerHTML = `<p>${message}</p>`;
 
-  popup.appendChild(popupContent);
-  popup.style.display = "block";
-
-  document.addEventListener("click", closePopup);
-
-  function closePopup(event) {
-    if (!popup.contains(event.target)) {
-      popupContent.remove();
-      popup.style.display = "none";
-      document.removeEventListener("click", closePopup);
-    }
-  }
-}  
 
 
 //changement couleur bouton VALIDER formulaire ajout projet
@@ -192,6 +174,28 @@ inputFieldsForm.forEach(field => {
 
   });
 });
+
+
+//popup
+function showPopupAlertAddProject(message) {
+  const popupContent = document.createElement("div");
+  popupContent.classList.add("popup-content");
+  popupContent.innerHTML = `<p>${message}</p>`;
+  const popup = document.querySelector(".popup");
+  popup.appendChild(popupContent);
+  popup.style.display = "block";
+
+  document.addEventListener("click", closePopup);
+
+  function closePopup(event) {
+    if (!popup.contains(event.target)) {
+      popupContent.remove();
+      popup.style.display = "none";
+      document.removeEventListener("click", closePopup);
+    }
+  }
+} 
+
 
 ///////////////////////////////////////////////////////////////////////////////    AJOUT PROJET - ENVOI API/
 // Ajouter un projet 
@@ -248,6 +252,8 @@ async function ajoutListenerAjoutProjet() {
   });
 }
 ajoutListenerAjoutProjet()
+
+
 
 
 /**********************************************************  Afficher la miniature de l'image dans la deuxième modale*/
