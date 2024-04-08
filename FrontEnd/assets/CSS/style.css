@@ -410,9 +410,9 @@ Modal1SuppressProject {
 	display: flex;
 }
 
-#selectedImage{
+/*#selectedImage{
 	display: none;
-}
+}*/
 
 #formAddProject{
 	display: flex;
@@ -478,7 +478,6 @@ Modal1SuppressProject {
 	background-color: black;
 	font-size: 8px;
 	padding: 2px 4px 2px 4px;
-	display: flex;
 	justify-content: center;
 	width: 5px;
 	position: absolute;
@@ -492,7 +491,7 @@ Modal1SuppressProject {
     bottom: 25px;
     right: 70px;
     font-size: 20px;
-	display: none;
+	display: flex;
 	cursor: pointer;
 }
 
@@ -516,6 +515,16 @@ Modal1SuppressProject {
 
 #formulaireAjoutProjet{
 	display: none;
+}
+
+#file-preview{
+	width:80px;
+}
+
+.imageMiniature {
+	background-color: rgb(235 235 235);
+	display: none;
+	justify-content: center;
 }
 
 .greySquareModale2{

@@ -36,18 +36,9 @@ function logLinkRoad() {
 }
 logLinkRoad()
 
-        /*btnDeleteList.forEach(function(item) {
-            item.addEventListener("click", function(event) {
-                event.preventDefault(); 
-                projectElement.id.remove();
-            });
-        })*/
-        
 
-//affichage des projets
-let allProjects = [];
 
-export async function generateProjects(projects) {
+async function generateProjects(projects) {
     try {
         mainGallery.innerHTML = "";
         projects.forEach(project => {
@@ -67,13 +58,15 @@ export async function generateProjects(projects) {
 }
 
 // Affichage boutons filtre catégories
-async function generateCategories() {
+export async function generateCategories() {
     try {
         const dataCategoriesFromAPI = await getCategoryAPI();
-        allProjects = await getWorksAPI(); // Stocker tous les projets initialement
+         let allProjects = [];
+         allProjects = await getWorksAPI(); // Stocker tous les projets initialement
 
         if (isLogged === true) {
             buttonAll.remove();
+            generateProjects(allProjects);
         } else {
             generateProjects(allProjects);// bouton tous
             ModalBtn.remove();
