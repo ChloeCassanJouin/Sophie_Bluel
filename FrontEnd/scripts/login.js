@@ -5,9 +5,7 @@ const loginEmailError = document.querySelector(".loginEmailError");
 const loginPasswordError = document.querySelector(".loginPasswordError")
 const popup = document.querySelector(".popup");
 
-
 localStorage.removeItem("token"); // suppression token
-
 
 //récupération des valeurs email et password
 submit.addEventListener("click", function (event) {
@@ -19,6 +17,7 @@ submit.addEventListener("click", function (event) {
   };
   login(user);
 });
+
 
 ////////////////////////////////////////////////////////////////////////////////////// gestion syntaxe identifiants//
 //verifier la syntaxe de l'email et présence d'un password
@@ -84,6 +83,7 @@ async function login(user) {
     console.error("Error:", error);
   }
 }
+
 
 //popup "identifiants non valides"
 function showPopupAlert(message) {

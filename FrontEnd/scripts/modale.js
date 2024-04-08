@@ -9,18 +9,14 @@ const titleModal = document.querySelector('.titleModal');
 const Modal1SuppressProject = document.querySelector('.Modal1SuppressProject')
 const BtnAddProject = document.querySelector('.addProjectsBtn');
 const arrowBackToModale1 = document.querySelector('.arrowBackToModale1');
-const greySquareModale2 = document.querySelector("greySquareModale2");
-const faMountainSun = document.querySelector("fa-mountain-sun");
 const formAddProject = document.getElementById("formAddProject");
 const imageUrlupload = document.getElementById("imageUrl");
-const imgFormatAlert = document.querySelector(".imgFormatAlert");
-const ImgUploadBtn = document.querySelector("ImgUploadBtn");
 const mainGallery = document.querySelectorAll(".mainGallery");
-const mountainIconContainer = document.querySelector("mountainIconContainer");
 const inputFieldsForm = document.querySelectorAll(".formField");
 const formBtn = document.getElementById("boutonValidation");//bouton validation formulaire ajout
 const popup = document.querySelector(".popup");
 let projectElement; // utiliser dans fonction fetch
+
 
 ////////////////////////////////////////////////////////////////////////////////      TOKEN///////////////
 const token = localStorage.getItem("token");
@@ -38,10 +34,12 @@ openModalBtn.addEventListener("click", function() {
 });
 }
 openModal1()
+
 //fermeture modale
 closeModalBtn.addEventListener("click", function() {
   modal.style.display = "none";
 });
+
 // Fermeture de la modale en cliquant en dehors
 window.addEventListener("click", function(event) {
   if (event.target === modal) {
@@ -116,7 +114,6 @@ function ArrowBackToModale1() {
 }
 ArrowBackToModale1();
 
-
 ///////////////////////////////////////////////////////////////////////////////    STRUCTURE FORMULAIRE AJOUT PROJET/
 //récupération des catégories dans formulaire
 function fetchAndDisplayCategories() {
@@ -150,16 +147,13 @@ function verifyFormAddProjectModal2() {
   const titleAddProjectModal2 = document.querySelector(".ModalAddProjectTitleCase").value;
   const categoryAddProjectModal2 = document.getElementById("modalAddImageCategory").value;
 
-  if (imageAddProjectModal2 === '' || titleAddProjectModal2 === '' || categoryAddProjectModal2 === '') {
-    alert('Veuillez remplir tous les champs du formulaire');
+if (imageAddProjectModal2 === '' || titleAddProjectModal2 === '' || categoryAddProjectModal2 === ''/* || response.status === 401 || response.status === 400*/) {
+    showPopupModalAlert('Veuillez remplir tous les champs du formulaire');
+    Modal1SuppressProject.style.display = "none";
     return false;
   }
   return true;
 }
-
-
-
-
 
 //changement couleur bouton VALIDER formulaire ajout projet
 inputFieldsForm.forEach(field => {
@@ -174,27 +168,6 @@ inputFieldsForm.forEach(field => {
 
   });
 });
-
-
-//popup
-function showPopupAlertAddProject(message) {
-  const popupContent = document.createElement("div");
-  popupContent.classList.add("popup-content");
-  popupContent.innerHTML = `<p>${message}</p>`;
-  const popup = document.querySelector(".popup");
-  popup.appendChild(popupContent);
-  popup.style.display = "block";
-
-  document.addEventListener("click", closePopup);
-
-  function closePopup(event) {
-    if (!popup.contains(event.target)) {
-      popupContent.remove();
-      popup.style.display = "none";
-      document.removeEventListener("click", closePopup);
-    }
-  }
-} 
 
 
 ///////////////////////////////////////////////////////////////////////////////    AJOUT PROJET - ENVOI API/
@@ -234,29 +207,39 @@ async function ajoutListenerAjoutProjet() {
             return
           }
           if (response.status === 401) {
-            showPopupAlertAddProject("Veuillez enregistrer à nouveau vos identifiants.");
-            return;
-            
-        }
-          if (response.status === 400 || response.status === 500) {
-            console.log("erreur 500")
-            showPopupAlertAddProject("Veuillez remplir tous les champs du formulaire.");
-            
-            Modal1SuppressProject.style.display = "none";
-            return;
-          }
+            showPopupModalAlert("Veuillez enregistrer à nouveau vos identifiants.");
+            return;        
+        }         
       } catch (error) {
           console.log(error);
-      }
-      
+      }      
   });
 }
 ajoutListenerAjoutProjet()
 
 
+//popup
+function showPopupModalAlert(message) {
+  const popupContent = document.createElement("div");
+  popupContent.classList.add("popup-content");
+  popupContent.innerHTML = `<p>${message}</p>`;
+
+  popup.appendChild(popupContent);
+  popup.style.display = "block";
 
 
-/**********************************************************  Afficher la miniature de l'image dans la deuxième modale*/
+document.addEventListener("click", closePopup);
+
+function closePopup(event) {
+  if (!popup.contains(event.target)) {
+    popupContent.remove();
+    popup.style.display = "none";
+    document.removeEventListener("click", closePopup);
+  }
+}
+}
+
+//  Afficher la miniature de l'image dans la deuxième modale
 function displayImage() {
   const previewPhoto = () => {
     const file = imageUrlupload.files;
@@ -311,9 +294,6 @@ async function deleteProjets(id) {
       GetGalleryModal();
       generateCategories();
 
-    }
-    if (response.status === 401) {
-      showPopupAlertAddProject("Une erreur de droits s'est produite-401, veuillez vous relogger.");
     }
     if (response.status === 500) {
       showPopupAlertAddProject('Une erreur technique est survenu-500, veuillez réessayer.');

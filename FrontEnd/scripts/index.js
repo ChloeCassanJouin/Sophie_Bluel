@@ -5,13 +5,10 @@ const buttonAll = document.querySelector(".btn-filter_all");
 const mainGallery = document.querySelector(".mainGallery");
 const ModalBtn = document.getElementById("OpenModalBtn");
 const logLink = document.getElementById("logLink");
-let btnDeleteList = document.querySelectorAll(".js-delete-work");
-const allFilteredButtons = document.querySelectorAll(".buttonCategories");
 
 // Récupérer le token depuis le stockage local
 const token = localStorage.getItem("token");
 const isLogged = token ? true : false;
-
 
 //affichage mot login ou logout
 function loggedState() {
@@ -37,7 +34,6 @@ function logLinkRoad() {
 logLinkRoad()
 
 
-
 async function generateProjects(projects) {
     try {
         mainGallery.innerHTML = "";
@@ -56,6 +52,7 @@ async function generateProjects(projects) {
         console.log("Une erreur est survenue lors de la récupération des projets", error);
     }
 }
+
 
 // Affichage boutons filtre catégories
 export async function generateCategories() {
@@ -90,5 +87,4 @@ export async function generateCategories() {
         console.log("Une erreur est survenue lors de la récupération des catégories", error);
     }
 }
-
 generateCategories();
