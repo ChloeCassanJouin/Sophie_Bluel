@@ -406,19 +406,6 @@ footer nav ul {
 	margin-block-start: 0em;
 }
 
-Modal1SuppressProject {
-	display: flex;
-}
-
-/*#selectedImage{
-	display: none;
-}*/
-
-#formAddProject{
-	display: flex;
-	flex-direction: column;
-}
-
 .modalGallery {
 	width: 100%;
 	display: grid;
@@ -464,7 +451,6 @@ Modal1SuppressProject {
 	justify-content: center;
 }
 
-
 /*********************suppression projets*/
 .js-delete-work {
 	cursor: pointer;
@@ -486,6 +472,10 @@ Modal1SuppressProject {
 }
 
 /*******************************************Modal 2*/
+#formAddProject{
+	display: flex;
+	flex-direction: column;
+}
 .arrowBackToModale1{
 	position: relative;
     bottom: 25px;
