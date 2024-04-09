@@ -141,19 +141,29 @@ function fetchAndDisplayCategories() {
 }
 fetchAndDisplayCategories();
 
-//vérification Formulaire modale 2
-function verifyFormAddProjectModal2() {
-  const imageAddProjectModal2 = document.getElementById("imageUrl").value;
-  const titleAddProjectModal2 = document.querySelector(".ModalAddProjectTitleCase").value;
-  const categoryAddProjectModal2 = document.getElementById("modalAddImageCategory").value;
 
-if (imageAddProjectModal2 === '' || titleAddProjectModal2 === '' || categoryAddProjectModal2 === ''/* || response.status === 401 || response.status === 400*/) {
-    showPopupModalAlert('Veuillez remplir tous les champs du formulaire');
-    Modal1SuppressProject.style.display = "none";
-    return false;
+//popup
+function showPopupModalAlert(message) {
+  
+  const popupContent = document.createElement("div");
+  popupContent.classList.add("popup-content");
+  popupContent.innerHTML = `<p>${message}</p>`;
+
+  popup.appendChild(popupContent);
+  popup.style.display = "block";
+  console.log("popup")
+
+document.addEventListener("click", closePopup);
+
+function closePopup(event) {
+  if (!popup.contains(event.target)) {
+    popupContent.remove();
+    popup.style.display = "none";
+    document.removeEventListener("click", closePopup);
   }
-  return true;
 }
+}
+
 
 //changement couleur bouton VALIDER formulaire ajout projet
 inputFieldsForm.forEach(field => {
@@ -175,8 +185,6 @@ inputFieldsForm.forEach(field => {
 async function ajoutListenerAjoutProjet() {
   formBtn.addEventListener("click", async function(event) {
       event.preventDefault();
-      verifyFormAddProjectModal2()
-      modal.style.display = "none";
       Modal1SuppressProject.style.display = "block";
       titleModal.textContent = "Galerie photo";
 
@@ -204,10 +212,18 @@ async function ajoutListenerAjoutProjet() {
             GetGalleryModal();
             generateCategories();
             formAddProject.reset();
+            modal.style.display = "none";
             return
           }
+          if (response.status === 400 || response.status === 500) {
+            showPopupModalAlert("Veuillez remplir tous les champs du formulaire.");
+            Modal1SuppressProject.style.display = "none";
+
+            return;        
+        } 
           if (response.status === 401) {
             showPopupModalAlert("Veuillez enregistrer à nouveau vos identifiants.");
+            Modal1SuppressProject.style.display = "none";
             return;        
         }         
       } catch (error) {
@@ -218,26 +234,7 @@ async function ajoutListenerAjoutProjet() {
 ajoutListenerAjoutProjet()
 
 
-//popup
-function showPopupModalAlert(message) {
-  const popupContent = document.createElement("div");
-  popupContent.classList.add("popup-content");
-  popupContent.innerHTML = `<p>${message}</p>`;
 
-  popup.appendChild(popupContent);
-  popup.style.display = "block";
-
-
-document.addEventListener("click", closePopup);
-
-function closePopup(event) {
-  if (!popup.contains(event.target)) {
-    popupContent.remove();
-    popup.style.display = "none";
-    document.removeEventListener("click", closePopup);
-  }
-}
-}
 
 //  Afficher la miniature de l'image dans la deuxième modale
 function displayImage() {
