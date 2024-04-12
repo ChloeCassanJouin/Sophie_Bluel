@@ -18,7 +18,6 @@ submit.addEventListener("click", function (event) {
   login(user);
 });
 
-
 ////////////////////////////////////////////////////////////////////////////////////// gestion syntaxe identifiants//
 //verifier la syntaxe de l'email et présence d'un password
 function VerifID(user) {
@@ -75,9 +74,7 @@ async function login(user) {
     if (result.token) {
       localStorage.setItem("token", result.token);
       window.location.href = "../../index.html";
-      console.log(result)
       const token = result.token
-      console.log(token)
     }
   } catch (error) {
     console.error("Error:", error);

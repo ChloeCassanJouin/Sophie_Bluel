@@ -151,7 +151,6 @@ function showPopupModalAlert(message) {
 
   popup.appendChild(popupContent);
   popup.style.display = "block";
-  console.log("popup")
 
 document.addEventListener("click", closePopup);
 
@@ -285,7 +284,6 @@ async function deleteProjets(id) {
   })
   .then(response => {
     if (response.status === 204 || response.status == 200 ) {
-      console.log('Project deleted successfully.');
       modalGallery.innerHTML = ""; 
       mainGallery.innerHTML = "";
       GetGalleryModal();

@@ -33,7 +33,6 @@ function logLinkRoad() {
 }
 logLinkRoad()
 
-
 //affichage galerie
 async function generateProjects(projects) {
     try {
