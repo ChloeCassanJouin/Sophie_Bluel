@@ -1,5 +1,5 @@
-import { getWorksAPI } from './api.js';
 import { generateCategories } from './index.js';
+import { getWorksAPI, getCategoryAPI } from './api.js';
 
 const openModalBtn = document.getElementById('OpenModalBtn');
 const modal = document.querySelector('.modal');
@@ -116,29 +116,30 @@ ArrowBackToModale1();
 
 ///////////////////////////////////////////////////////////////////////////////    STRUCTURE FORMULAIRE AJOUT PROJET/
 //récupération des catégories dans formulaire
-function fetchAndDisplayCategories() {
-  fetch('http://localhost:5678/api/categories')
-      .then(response => response.json())
-      .then(data => {
-          const selectElement = document.getElementById('modalAddImageCategory');
-          selectElement.innerHTML = ''; // Effacer les options existantes
+async function fetchAndDisplayCategories() {
+  try {
+      const dataCategoriesFromAPI = await getCategoryAPI();
+      console.log(dataCategoriesFromAPI);
 
-          const blankOption = document.createElement('option');
-            blankOption.value = ''; // La valeur vide
-            blankOption.textContent = ''; // Texte affiché
-            selectElement.appendChild(blankOption);
+      const selectElement = document.getElementById('modalAddImageCategory');
+      selectElement.innerHTML = ''; // Effacer les options existantes
 
-          data.forEach(category => {
-              const optionElement = document.createElement('option');
-              optionElement.value = category.id;
-              optionElement.textContent = category.name;
-              selectElement.appendChild(optionElement);
-          });
-      })
-      .catch(error => {
-          console.error('Erreur lors de la récupération des catégories :', error);
+      const blankOption = document.createElement('option');
+      blankOption.value = ''; // La valeur vide
+      blankOption.textContent = ''; // Texte affiché
+      selectElement.appendChild(blankOption);
+
+      dataCategoriesFromAPI.forEach(category => {
+          const optionElement = document.createElement('option');
+          optionElement.value = category.id;
+          optionElement.textContent = category.name;
+          selectElement.appendChild(optionElement);
       });
+  } catch (error) {
+      console.error('Erreur lors de la récupération des catégories :', error);
+  }
 }
+
 fetchAndDisplayCategories();
 
 
@@ -284,6 +285,7 @@ async function deleteProjets(id) {
   })
   .then(response => {
     if (response.status === 204 || response.status == 200 ) {
+
       modalGallery.innerHTML = ""; 
       mainGallery.innerHTML = "";
       GetGalleryModal();
